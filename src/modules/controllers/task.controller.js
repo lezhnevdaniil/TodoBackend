@@ -1,4 +1,4 @@
-const Task = require("../../db/models/task/index");
+const Task = require('../../db/models/task/index');
 
 module.exports.getAllTasks = (req, res) => {
   Task.find()
@@ -9,36 +9,29 @@ module.exports.getAllTasks = (req, res) => {
       res.send(err);
     });
 };
-
 module.exports.createNewTask = (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.set('Access-Control-Allow-Origin', '*');
   const body = req.body;
-  if (body.hasOwnProperty("text") & body.hasOwnProperty("isCheck")) {
+  const {text, isCheck} = body;
+  if (body.hasOwnProperty('text') & body.hasOwnProperty('isCheck')) {
     const task = new Task({
-      text: body.text,
-      isCheck: body.isCheck,
+      text: text,
+      isCheck: isCheck
     });
-    task
-      .save()
-      .then((result) => {
-        Task.find().then((tasks) => {
-          res.send(tasks);
-        });
+    task.save().then((result) => {
+        res.send(result);
       })
       .catch((err) => res.send(err));
   }
 };
-
 module.exports.changeTaskInfo = (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.set('Access-Control-Allow-Origin', '*');
   const body = req.body;
   const selector = { _id: body._id };
-  console.log('selector',selector);
-  console.log(body)
   if (
-    body.hasOwnProperty("text") &&
-    body.hasOwnProperty("_id") &&
-    body.hasOwnProperty("isCheck")
+    body.hasOwnProperty('text') &&
+    body.hasOwnProperty('_id') &&
+    body.hasOwnProperty('isCheck')
   ) {
     Task.updateOne(selector, {
       $set: {
@@ -56,7 +49,6 @@ module.exports.changeTaskInfo = (req, res) => {
       });
   }
 };
-
 module.exports.deleteTask = (req, res) => {
   const id = req.query.id;
   if (id) {
